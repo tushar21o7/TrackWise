@@ -1,0 +1,16 @@
+<%- include('index', { isLoggedIn: isLoggedIn }) %>
+<div class="cards-container flex" id="cards-container">
+    <% products.forEach(function(value, key){ %>
+        <a target="_blank" href="/api/v1/search/<%= value.q %>/<%= key %>">
+            <div class="card" id="<%= key %>">
+                <div class="card-header"> 
+                    <img src="<%= value.image %>" alt="here is the" id="product-img">
+                </div>
+                <div class="card-content">
+                    <h3 id="product-name"><%= value.name %></h3>
+                    <h6 id="product-price"><%= value.price %></h6>
+                </div>
+            </div>
+        </a>
+    <% }); %>
+</div>

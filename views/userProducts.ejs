@@ -1,0 +1,29 @@
+<head>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<%- include('nav.ejs', {isLoggedIn: isLoggedIn}) %>
+
+<div class="cards-container flex" id="cards-container">
+    <% products.forEach(function(product){ %>
+        <a target="_blank" href="/api/v1/products/<%= product.id %>">
+            <div class="card" id="<%= product.id %>">
+                <div class="card-header"> 
+                    <img src="<%= product.image %>" alt="here is the" id="product-img">
+                </div>
+        </a>
+                <div class="card-content">
+                    <h3 id="product-name"><%= product.name %></h3>
+                    <h6 id="product-price"><%= product.price %></h6>
+                    <div>
+                        <button id="<%=product.id%>">Remove</button>
+                    </div>
+                </div>
+            </div>
+        
+        
+    <% }); %>
+</div>
+
+<script src="https://unpkg.com/axios@1.1.2/dist/axios.min.js"></script>
+<script src="/script.js" defer></script>
