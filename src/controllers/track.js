@@ -1,8 +1,9 @@
 import { Track } from "../models/Track.js";
 import { BadRequestError } from "../errors/index.js";
 import { StatusCodes } from "http-status-codes";
+import { sendMailToUser } from "../utils/mailer.js";
 
-const trackProduct = async (req, res) => {
+export const trackProduct = async (req, res) => {
   const {
     name,
     url,
@@ -46,7 +47,8 @@ const trackProduct = async (req, res) => {
     }
   );
 
+  const details = { name, email, url };
+  sendMailToUser(details, "Welcome");
+
   res.status(StatusCodes.OK).json({ msg: `You started tracking ${productId}` });
 };
-
-export { trackProduct };

@@ -79,6 +79,8 @@ app.use("/api/v1/search", scrapRouter);
 app.use("/api/v1/products", authenticateUser, productRouter);
 app.use("/api/v1/track", trackRouter);
 
+import { scheduleJob } from "./utils/scheduler.js";
+
 // app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 
@@ -97,3 +99,4 @@ const start = async () => {
 };
 
 start();
+scheduleJob();
