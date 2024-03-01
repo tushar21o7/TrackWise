@@ -5,31 +5,15 @@ dotenv.config({
   path: "./.env",
 });
 
-import { join } from "path";
 import cookieParser from "cookie-parser";
-// import csurf from "csurf";
-// import session from "express-session";
-// import MongoStore from "connect-mongo";
 
 import express from "express";
 const app = express();
 
 app.use(express.static("./public"));
-// app.use(express.static(join(__dirname + "public")));
 app.use(express.json({ limit: "16kb" }));
 app.use(express.urlencoded({ extended: true, limit: "16kb" }));
 app.use(cookieParser());
-// app.use(csurf());
-
-// app.use(
-//   session({
-//     secret: process.env.JWT_SECRET,
-//     cookie: {},
-//     resave: false,
-//     saveUninitialized: false,
-//     store: MongoStore.create({ mongoUrl: process.env.MONGO_URI }),
-//   })
-// );
 
 import rateLimiter from "express-rate-limit";
 import helmet, { contentSecurityPolicy } from "helmet";
@@ -65,24 +49,29 @@ app.use(
   })
 );
 
-// import notFoundMiddleware from "./middlewares/not-found";
+// import middlewares
+import notFoundMiddleware from "./middlewares/not-found.js";
 import errorMiddleware from "./middlewares/error-handler.js";
 import { authenticateUser } from "./middlewares/authentication.js";
 
+// import routers
 import authRouter from "./routes/auth.js";
 import productRouter from "./routes/products.js";
 import scrapRouter from "./routes/scrapper.js";
 import trackRouter from "./routes/track.js";
 
+// use routers
 app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/search", scrapRouter);
 app.use("/api/v1/products", authenticateUser, productRouter);
 app.use("/api/v1/track", trackRouter);
 
-import { scheduleJob } from "./utils/scheduler.js";
-
-// app.use(notFoundMiddleware);
+// use error middlewares
+app.use(notFoundMiddleware);
 app.use(errorMiddleware);
+
+// import scheduler
+import { scheduleJob } from "./utils/scheduler.js";
 
 app.get("/", (req, res) => res.json({ msg: "Home page" }));
 

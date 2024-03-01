@@ -10,15 +10,21 @@ const getAllProducts = async (req, res) => {
 };
 
 const createProduct = async (req, res) => {
-  //   const { productId, query } = req.body;
-  //   console.log(query);
-  // const item = cache.get(query).get(productId);
-  // delete item.q;
-  // item.createdBy = req.user.userId;
-
   req.body.createdBy = req.user._id;
+  const { createdBy, id, name } = req.body;
+
+  const alreadyPresent = await Product.findOne({ id, createdBy });
+
+  if (alreadyPresent) {
+    return res
+      .status(StatusCodes.BAD_REQUEST)
+      .json({ msg: `You are already watching ${name}` });
+  }
+
   const product = await Product.create(req.body);
-  res.status(StatusCodes.CREATED).json({ product });
+  res
+    .status(StatusCodes.CREATED)
+    .json({ product, msg: `You are now watching ${name}` });
 };
 
 const getProduct = async (req, res) => {
@@ -64,14 +70,19 @@ const deleteProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   const {
     params: { id: productId },
+    user: { _id: userId },
     body,
   } = req;
 
-  const product = await Product.findOneAndUpdate({ id: productId }, body, {
-    new: true,
-  });
+  const product = await Product.findOneAndUpdate(
+    { createdBy: userId, id: productId },
+    body,
+    {
+      new: true,
+    }
+  );
 
-  res.status(StatusCodes.OK).json({ msg: "Updated" });
+  res.status(StatusCodes.OK).json({ product, msg: "Updated" });
 };
 
 export {

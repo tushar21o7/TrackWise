@@ -20,7 +20,7 @@ const trackSchema = new mongoose.Schema(
     },
     users: [
       {
-        email: { type: String },
+        email: { type: String, required: true },
         expectedPrice: { type: Number, required: true },
       },
     ],

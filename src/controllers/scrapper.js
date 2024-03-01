@@ -32,13 +32,6 @@ export const getAllProducts = async (req, res) => {
     price: "._30jeq3",
   };
 
-  const classes =
-    $(class1.selTool).length != 0
-      ? class1
-      : $(class2.selTool).length != 0
-      ? class2
-      : class3;
-
   const url = `https://www.flipkart.com/search?q=${query}`;
 
   const resp = await axios.get(url, {
@@ -49,6 +42,13 @@ export const getAllProducts = async (req, res) => {
   });
 
   let $ = cheerio.load(resp.data);
+
+  const classes =
+    $(class1.selTool).length != 0
+      ? class1
+      : $(class2.selTool).length != 0
+      ? class2
+      : class3;
 
   const links = $(classes.url)
     .get()

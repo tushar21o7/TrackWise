@@ -1,14 +1,14 @@
-import { useState, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContext";
-import axios from "axios";
+import Track from "../components/Track";
+import { IoEyeOutline } from "react-icons/io5";
+import { AiFillThunderbolt } from "react-icons/ai";
+import Alert from "../components/Alert";
 
 const ScrappedSingleProduct = () => {
-  const { isLoggedIn } = useUserContext();
+  const { alertInfo, alertPage } = useUserContext();
   const { productId } = useParams();
   const navigate = useNavigate();
-  const [isStored, setIsStored] = useState(false);
-  const [isTracking, setIsTracking] = useState(false);
 
   const products = JSON.parse(localStorage.getItem("products"));
   let product;
@@ -18,138 +18,55 @@ const ScrappedSingleProduct = () => {
       break;
     }
   }
-  const { image, name, price, url, id } = product;
 
-  const updateDB = async () => {
-    try {
-      const body = { name, id, image, price, url, isTracking: true };
-      const token = sessionStorage.getItem("accessToken");
-      console.log("db");
-      const {
-        data: { msg },
-      } = await axios.patch(
-        `http://localhost:3000/api/v1/products/${id}`,
-        body,
-        {
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        }
-      );
-
-      console.log(msg);
-      setIsTracking(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const startTracking = async () => {
-    try {
-      const body = {
-        url,
-        email: "test2@gmail.com",
-        currentPrice: 40,
-        expectedPrice: 50,
-        id,
-      };
-      const {
-        data: { msg },
-      } = await axios.post("http://localhost:3000/api/v1/track", body);
-      console.log(msg);
-      // if (msg !== `You started tracking ${id}` || !isLoggedIn) return;
-      updateDB();
-    } catch (error) {
-      console.log(error.response);
-    }
-  };
-
-  const addToCart = async () => {
-    try {
-      const body = { name, id, image, price, url };
-      const token = sessionStorage.getItem("accessToken");
-      const { data } = await axios.post(
-        "http://localhost:3000/api/v1/products",
-        body,
-        {
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        }
-      );
-      console.log(data.product);
-      setIsStored(true);
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
-  const handleClick = () => {
-    if (!isLoggedIn) return navigate("/login");
-    addToCart();
-  };
-
-  const fetchProduct = useCallback(async () => {
-    try {
-      const token = sessionStorage.getItem("accessToken");
-      const { data } = await axios(
-        `http://localhost:3000/api/v1/products/${id}`,
-        {
-          headers: {
-            "Accept": "application/json",
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        }
-      );
-
-      console.log(data);
-      data.msg === "Success" ? setIsStored(true) : setIsStored(false);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [setIsStored]);
-
-  useEffect(() => {}, [isTracking]);
-
-  useEffect(() => {
-    if (!isLoggedIn) return;
-    fetchProduct();
-  }, [isLoggedIn, setIsStored]);
+  const { image, name, price, url } = product;
+  product.currentPrice = parseInt(Number(price.replace(/[^0-9.-]+/g, "")));
 
   return (
-    <div style={{ display: "flex", width: "full" }}>
-      <div style={{ width: "50%" }}>
-        <div style={{ width: "300px", height: "300px" }}>
-          <img src={image} alt="product image" />
+    product && (
+      <>
+        {alertPage === "ScrappedSingleProduct" && (
+          <div className="fixed top-16 left-1/2 -translate-x-1/2 z-50 flex justify-center">
+            <Alert type={alertInfo.type} msg={alertInfo.msg} />
+          </div>
+        )}
+        <div className="mt-28 mx-12 flex flex-wrap justify-center gap-20">
+          <div className="flex flex-col justify-between w-[500px] h-[500px]">
+            <div className="border-2 h-full flex justify-center align-middle">
+              <img
+                src={image}
+                alt="product image"
+                className="m-auto"
+                style={{ maxHeight: "400px" }}
+              />
+            </div>
+            <div className="mt-2 flex gap-x-2 justify-between">
+              <button
+                className="w-1/2 text-white bg-teal-600 hover:bg-teal-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-3.5 text-center"
+                onClick={() => navigate("/products")}
+              >
+                <IoEyeOutline className="size-5 inline" /> Go to watchlist
+              </button>
+              <button
+                className="w-1/2 text-white bg-emerald-600 hover:bg-emerald-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-4 py-3.5 text-center"
+                onClick={() => open(url, "_blank")}
+              >
+                <AiFillThunderbolt className="size-5 inline" /> Buy now on
+                Flipkart
+              </button>
+            </div>
+          </div>
+
+          <div className="flex flex-col justify-between w-[450px] h-[500px]">
+            <div className="space-y-5">
+              <h1 className="font-base text-3xl">{name}</h1>
+              <div className="font-semibold text-5xl">{price}</div>
+            </div>
+            <Track product={product} page={"ScrappedSingleProduct"} />
+          </div>
         </div>
-        <div>
-          {isStored ? (
-            <button>Remove from Cart</button>
-          ) : (
-            <button onClick={handleClick}>Add to Cart</button>
-          )}
-        </div>
-      </div>
-      <div style={{ width: "50%" }}>
-        <h3>{name}</h3>
-        <h4>{price}</h4>
-        <div>
-          {isTracking ? (
-            <button>Tracking...</button>
-          ) : (
-            <button onClick={startTracking}>Track</button>
-          )}
-        </div>
-      </div>
-      <div>
-        <button onClick={() => navigate(url)}>Buy now</button>
-      </div>
-    </div>
+      </>
+    )
   );
 };
 

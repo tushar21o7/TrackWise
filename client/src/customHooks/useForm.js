@@ -1,5 +1,3 @@
-import React from "react";
-
 const useForm = (form) => {
   const formData = new FormData(form);
 

@@ -1,19 +1,23 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import UserContext from "./contexts/UserContext";
+import useLogout from "./customHooks/useLogout";
+
 import {
-  HomeLayout,
   Home,
+  HomeLayout,
+  ProtectedRoute,
   Login,
   Register,
   ScrappedProducts,
   ScrappedSingleProduct,
   Products,
   SingleProduct,
-  ProtectedRoute,
   Error,
 } from "./pages";
 
 function App() {
+  useLogout();
+
   return (
     <UserContext>
       <BrowserRouter>

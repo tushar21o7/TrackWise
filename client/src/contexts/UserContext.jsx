@@ -9,6 +9,8 @@ const User = ({ children }) => {
   );
   const [productName, setProductName] = useState("");
   const [products, setProducts] = useState([]);
+  const [alertInfo, setAlertInfo] = useState({});
+  const [alertPage, setAlertPage] = useState(null);
 
   useEffect(() => {
     console.log("hello from global...");
@@ -23,6 +25,10 @@ const User = ({ children }) => {
         setProductName,
         products,
         setProducts,
+        alertInfo,
+        setAlertInfo,
+        alertPage,
+        setAlertPage,
       }}
     >
       {children}
