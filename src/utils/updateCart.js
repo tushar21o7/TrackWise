@@ -59,4 +59,6 @@ export const updateCart = async () => {
     },
     { new: true }
   );
+
+  console.log("updated cart");
 };

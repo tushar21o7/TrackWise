@@ -86,4 +86,6 @@ export const updateTracks = async () => {
   for (let i = 0; i < recipients.length; i++) {
     sendMailToUser(recipients[i], "Alert");
   }
+
+  console.log("updated tracks");
 };
