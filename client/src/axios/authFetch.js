@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const authFetch = axios.create({
-  baseURL: "http://localhost:3000",
+  baseURL: "https://trackwise-1ejd.onrender.com",
   headers: {
     Accept: "application/json",
     "Content-Type": "application/json",

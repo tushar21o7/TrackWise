@@ -6,8 +6,14 @@ import Alert from "../components/Alert";
 
 const Login = () => {
   const navigate = useNavigate();
-  const { setIsLoggedIn, alertPage, setAlertPage, alertInfo, setAlertInfo } =
-    useUserContext();
+  const {
+    setIsLoggedIn,
+    alertPage,
+    setAlertPage,
+    alertInfo,
+    setAlertInfo,
+    badPages,
+  } = useUserContext();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,7 +33,7 @@ const Login = () => {
 
       sessionStorage.setItem("accessToken", accessToken);
       setIsLoggedIn(true);
-      navigate("/");
+      navigate(badPages);
     } catch (error) {
       setAlertInfo({ type: 2, msg: error.response.data.msg });
       setAlertPage("Login");

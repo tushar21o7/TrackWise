@@ -86,8 +86,4 @@ export const updateTracks = async () => {
   for (let i = 0; i < recipients.length; i++) {
     sendMailToUser(recipients[i], "Alert");
   }
-
-  const d = new Date();
-  const time = d.getMinutes();
-  console.log(time, ": success!!");
 };
