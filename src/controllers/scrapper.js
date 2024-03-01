@@ -35,7 +35,7 @@ export const getAllProducts = async (req, res) => {
   const url = `https://www.flipkart.com/search?q=${query}`;
 
   try {
-    const resp = await axios.get("https://www.flipkart.com", {
+    const resp = await axios.get("https://www.amazon.in/iphone/s?k=iphone", {
       headers: {
         "User-Agent":
           "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
