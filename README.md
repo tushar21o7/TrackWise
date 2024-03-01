@@ -4,7 +4,7 @@ TrackWise is a comprehensive price tracking platform for products available on F
 
 ## Deployed URL
 
-https://65e1eed3207176ec59426a3e--stellular-chebakia-fa4db0.netlify.app
+https://65e23b8b5ca44618837b6ce3--ornate-bienenstitch-a131f8.netlify.app
 
 ## Features
 
