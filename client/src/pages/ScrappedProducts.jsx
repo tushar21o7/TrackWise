@@ -18,7 +18,7 @@ const ScrappedProducts = () => {
     }
 
     try {
-      const { data } = await axios(`/api/v1/search/${productName}`);
+      const { data } = await axios.get(`/api/v1/search/${productName}`);
       localStorage.setItem("productName", productName);
       localStorage.setItem("products", JSON.stringify(data.products));
       console.log("products fetched using network call");
