@@ -8,7 +8,7 @@ import { useUserContext } from "../contexts/UserContext";
 const ScrappedProducts = () => {
   const { productName } = useParams();
   const [products, setProducts] = useState([]);
-  const { alertInfo, alertPage } = useUserContext();
+  const { alertInfo, setAlertInfo, alertPage, setAlertPage } = useUserContext();
 
   const fetchProducts = useCallback(async () => {
     if (localStorage.getItem("productName") === productName) {
@@ -24,7 +24,11 @@ const ScrappedProducts = () => {
       console.log("products fetched using network call");
       setProducts(data.products);
     } catch (error) {
-      console.log(error);
+      const { defaultProducts, msg } = error.response.data;
+      console.log(error.response.data);
+      setAlertInfo({ type: 3, msg });
+      setAlertPage("ScrappedProducts");
+      setProducts(defaultProducts);
     }
   }, [setProducts, productName]);
 
